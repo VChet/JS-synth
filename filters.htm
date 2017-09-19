@@ -1,0 +1,53 @@
+<script>
+  var audio_context = window.AudioContext || window.webkitAudioContext;
+
+  //Audio Engine
+  var con = new audio_context(); // create the audio system
+  var osc = con.createOscillator(); // create an oscillator
+  var filter = con.createBiquadFilter();
+
+  osc.frequency.value = 600;
+  filter.gain.value = 0.5;
+  filter.frequency.value = 100;
+  osc.type="sawtooth";
+
+  osc.connect(filter);
+  filter.connect(con.destination); // audio output
+
+  osc.start();
+
+  function setNote(key) {
+    if (key == "z") { // C
+      osc.frequency.value = 261.63;
+    }
+    if (key == "x") { // D
+      osc.frequency.value = 293.66;
+    }
+    if (key == "c") { // E
+      osc.frequency.value = 329.63;
+    }
+    if (key == "v") { // F
+      osc.frequency.value = 349.23;
+    }
+  }
+
+  function changeFilter(mx, my) {
+    filter.frequency.value = mx * 5; // cutoff
+    filter.Q.value = my / 25; // emphasis on the filter
+  }
+</script>
+
+<body style="margin:0; padding:0; color:#BBB">
+  <div style="background:#272727; height:5000px"
+       tabindex="1"
+       onkeydown="setNote(event.key)"
+       onmousemove="changeFilter(event.clientX, event.clientY)"
+  >
+    <div style="padding:80px">
+      horizontal - cutoff<br>
+      vertical - emphasis<br><br>
+      <button onclick="filter.connect(con.destination)">Start</button>
+      <button onclick="filter.disconnect()">Stop</button>
+    </div>
+  </div>
+</body>
