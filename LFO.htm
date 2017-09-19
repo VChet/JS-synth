@@ -1,0 +1,36 @@
+<script>
+  var audio_context = window.AudioContext || window.webkitAudioContext;
+
+  //Audio Engine
+  var con = new audio_context(); // create the audio system
+  var osc = con.createOscillator(); // create an oscillator
+  var lfo = con.createOscillator();
+  var lfo_amp = con.createGain(); // create an amplifier
+
+  lfo_amp.gain.value = 200;
+  osc.frequency.value = 300;
+  lfo.frequency.value = 0.5;
+
+  osc.start();
+  lfo.start();
+
+  function startOsc() {
+    //lfo.connect(lfo_amp);
+    lfo_amp.connect(osc.frequency);
+    osc.connect(con.destination); // audio output
+  }
+</script>
+
+<body style="margin:0; padding:0">
+  <div style="background:#272727; height:5000px"
+       onmousemove="lfo.frequency.value = event.clientX"
+       onmousemove="osc.frequency.value = event.clientY"
+  >
+    <div style="padding:80px 15px">
+      <button onclick="startOsc()">Start</button>
+      <button onclick="osc.disconnect()">Pause</button>
+      <button onclick="lfo.connect(lfo_amp)">Enable LFO</button>
+      <button onclick="lfo.disconnect()">Disable LFO</button>
+    </div>
+  </div>
+</body>
