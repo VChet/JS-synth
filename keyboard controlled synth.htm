@@ -1,0 +1,39 @@
+<script>
+  var audio_context = window.AudioContext || window.webkitAudioContext;
+
+  //Audio Engine
+  var con = new audio_context(); // create the audio system
+  var osc = con.createOscillator(); // create an oscillator
+
+  function startOsc() {
+    osc.connect(con.destination); //connect to audio output
+    osc.start();
+  }
+
+  function setNote(key) {
+    if (key == "z") { // C
+      osc.frequency.value = 261.63;
+    }
+    if (key == "x") { // D
+      osc.frequency.value = 293.66;
+    }
+    if (key == "c") { // E
+      osc.frequency.value = 329.63;
+    }
+    if (key == "v") { // F
+      osc.frequency.value = 349.23;
+    }
+  }
+</script>
+
+<body>
+  <div style="background:#272727; height:5000px"
+       tabindex="1"
+       onkeydown="setNote(event.key)"
+  >
+    <div style="padding:80px">
+      <button onclick="startOsc()">Start</button>
+      <button onclick="osc.disconnect()">Stop</button>
+    </div>
+  </div>
+</body>
