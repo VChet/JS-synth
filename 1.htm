@@ -5,13 +5,17 @@
     var con = new audio_context(); // create the audio system
     var osc = con.createOscillator(); // create an oscillator
 
-    osc.connect(con.destination); //connect to audio output
-
-    osc.start();
-    setTimeout(function() { osc.stop() }, 5000);
+    function startOsc() {
+        osc.connect(con.destination); //connect to audio output
+        osc.start();
+    }
 </script>
 
 <body>
     <div style="background:#272727; height:5000px">
+        <div style="padding:80px">
+            <button onclick="startOsc()">Start</button>
+            <button onclick="osc.disconnect()">Stop</button>
+        </div>
     </div>
 </body>
