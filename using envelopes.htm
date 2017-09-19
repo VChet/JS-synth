@@ -1,0 +1,34 @@
+<script>
+  var audio_context = window.AudioContext || window.webkitAudioContext;
+
+  //Audio Engine
+  var con = new audio_context(); // create the audio system
+
+  function playSynth() {
+    var osc = con.createOscillator();
+    var amp = con.createGain();
+    var now = con.currentTime;
+
+    amp.gain.value = 0;
+    amp.gain.linearRampToValueAtTime(0.1, now + 2);
+    amp.gain.linearRampToValueAtTime(0, now + 4);
+
+    osc.frequency.value = Math.random() * 500;
+    osc.type = "sine"; // same as default
+
+    osc.connect(amp);
+    amp.connect(con.destination);
+
+    osc.start();
+
+    osc.stop(now + 4.1);
+  }
+</script>
+
+<body style="margin:0; padding:0">
+  <div style="background:#272727; height:100%"
+       tabindex="0"
+       onkeydown="playSynth()"
+  >
+  </div>
+</body>
