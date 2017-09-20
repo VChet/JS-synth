@@ -5,19 +5,17 @@
   var con = new audio_context(); // create the audio system
   var osc = con.createOscillator(); // create an oscillator
 
-  function startOsc() {
-    osc.connect(con.destination); //connect to audio output
-    osc.start();
-  }
+  osc.start();
 </script>
 
-<body>
-  <div style="background:#272727; height:5000px"
+<body style="margin:0; padding:0; color:#BBB">
+  <div style="background:#272727; height:100%"
        onmousemove="osc.frequency.value = event.clientY"
   >
-    <div style="padding:80px">
-      <button onclick="startOsc()">Start</button>
-      <button onclick="osc.disconnect()">Stop</button>
+    <div style="padding:15px">
+      <button onclick="osc.connect(con.destination);">Start</button>
+      <button onclick="osc.disconnect()">Stop</button><br><br>
+      vertical - frequency
     </div>
   </div>
 </body>

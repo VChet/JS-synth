@@ -10,25 +10,28 @@
     var now = con.currentTime;
 
     amp.gain.value = 0;
-    amp.gain.linearRampToValueAtTime(0.1, now + 2);
-    amp.gain.linearRampToValueAtTime(0, now + 4);
+    amp.gain.linearRampToValueAtTime(0.1, now + 0.2);
+    amp.gain.linearRampToValueAtTime(0, now + 0.5);
 
     osc.frequency.value = Math.random() * 500;
-    osc.type = "sine"; // same as default
+    osc.type = "sawtooth"; // 'sine' for default
 
     osc.connect(amp);
     amp.connect(con.destination);
 
     osc.start();
 
-    osc.stop(now + 4.1);
+    osc.stop(now + 0.7);
   }
 </script>
 
-<body style="margin:0; padding:0">
+<body style="margin:0; padding:0; color:#BBB">
   <div style="background:#272727; height:100%"
        tabindex="0"
        onkeydown="playSynth()"
   >
+    <div style="padding:15px">
+      press any key<br>
+    </div>
   </div>
 </body>

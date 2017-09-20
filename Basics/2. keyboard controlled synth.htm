@@ -5,10 +5,7 @@
   var con = new audio_context(); // create the audio system
   var osc = con.createOscillator(); // create an oscillator
 
-  function startOsc() {
-    osc.connect(con.destination); //connect to audio output
-    osc.start();
-  }
+  osc.start();
 
   function setNote(key) {
     if (key == "z") { // C
@@ -26,14 +23,18 @@
   }
 </script>
 
-<body>
-  <div style="background:#272727; height:5000px"
+<body style="margin:0; padding:0; color:#BBB">
+  <div style="background:#272727; height:100%"
        tabindex="1"
        onkeydown="setNote(event.key)"
   >
-    <div style="padding:80px">
-      <button onclick="startOsc()">Start</button>
-      <button onclick="osc.disconnect()">Stop</button>
+    <div style="padding:15px">
+      <button onclick="osc.connect(con.destination);">Start</button>
+      <button onclick="osc.disconnect()">Stop</button><br><br>
+      z - C note<br>
+      x - D note<br>
+      c - E note<br>
+      v - F note
     </div>
   </div>
 </body>

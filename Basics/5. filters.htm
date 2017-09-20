@@ -12,7 +12,6 @@
   osc.type="sawtooth";
 
   osc.connect(filter);
-  filter.connect(con.destination); // audio output
 
   osc.start();
 
@@ -38,16 +37,21 @@
 </script>
 
 <body style="margin:0; padding:0; color:#BBB">
-  <div style="background:#272727; height:5000px"
+  <div style="background:#272727; height:100%"
        tabindex="1"
        onkeydown="setNote(event.key)"
        onmousemove="changeFilter(event.clientX, event.clientY)"
   >
-    <div style="padding:80px">
-      horizontal - cutoff<br>
-      vertical - emphasis<br><br>
+    <div style="padding:15px">
+
       <button onclick="filter.connect(con.destination)">Start</button>
-      <button onclick="filter.disconnect()">Stop</button>
+      <button onclick="filter.disconnect()">Stop</button><br><br>
+      horizontal - cutoff<br>
+      vertical - emphasis<br>
+      z - C note<br>
+      x - D note<br>
+      c - E note<br>
+      v - F note
     </div>
   </div>
 </body>
