@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <script src="NexusUI.js"></script>
+  </head>
+  <body style="margin:0; padding:0; color:#BBB">
+    <div style="background:#272727; height:100%">
+      <div style="padding:15px">
+        <button onclick="osc.connect(con.destination);">Start</button>
+        <button onclick="osc.disconnect()">Stop</button><br><br>
+
+        <span id="slider"></span><br>
+        <span id="number">frequency </span>
+      </div>
+    </div>
+    <script>
+      // Audio Engine
+      var audio_context = window.AudioContext || window.webkitAudioContext;
+
+      var con = new audio_context(); // create the audio system
+      var osc = con.createOscillator(); // create an oscillator
+
+      osc.start();
+
+      // Nexus UI
+      var slider = new Nexus.Slider("#slider", {
+        "size": [100,20],
+        "value": osc.frequency.value,
+        "min": 100,
+        "max": 1000
+      });
+      slider.on("change", function(value) {
+        osc.frequency.value = value;
+      })
+
+      var number = new Nexus.Number("#number");
+      number.link(slider);
+    </script>
+  </body>
+</html>
