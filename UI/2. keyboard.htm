@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <script src="NexusUI.js"></script>
+  </head>
+  <body style="margin:0; padding:0; color:#BBB">
+    <div style="background:#272727; height:100%">
+      <div style="padding:15px">
+        <button onclick="osc.connect(con.destination);">Start</button>
+        <button onclick="osc.disconnect()">Stop</button><br><br>
+
+        <span id="slider"></span><br>
+        <span id="number">frequency&nbsp</span><br><br>
+        <div id="keyboard"></div>
+      </div>
+    </div>
+    <script>
+      // Audio Engine
+      var audio_context = window.AudioContext || window.webkitAudioContext;
+
+      var con = new audio_context(); // create the audio system
+      var osc = con.createOscillator(); // create an oscillator
+
+      osc.start();
+
+      // Nexus UI
+      function sliderChanged(v) {
+        osc.frequency.value = v;
+      }
+
+      function keyboardChanged(data){
+        console.log(data.note);
+        osc.frequency.value = Math.pow(2, (data.note - 69) / 12) * 440;
+      }
+
+      var slider = new Nexus.Slider("#slider", {
+        "size": [100,20],
+        "value": osc.frequency.value,
+        "min": 100,
+        "max": 1000
+      });
+      slider.on("change", sliderChanged);
+
+      var number = new Nexus.Number("#number", {"size": [50,20]});
+      number.link(slider); // connect number interface to slider
+
+      var keyboard = new Nexus.Piano("#keyboard", {"size": [500,125]});
+      keyboard.on("change", keyboardChanged);
+    </script>
+  </body>
+</html>
