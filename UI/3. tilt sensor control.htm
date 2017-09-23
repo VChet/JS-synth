@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <script src="NexusUI.js"></script>
+  </head>
+  <body style="margin:0; padding:0; color:#BBB">
+    <div style="background:#272727; height:100%">
+      <div style="padding:15px">
+        <button onclick="osc.connect(con.destination);">Start</button>
+        <button onclick="osc.disconnect()">Stop</button><br><br>
+
+        <span id="tilt"></span>
+      </div>
+    </div>
+    <script>
+      // Audio Engine
+      var audio_context = window.AudioContext || window.webkitAudioContext;
+
+      var con = new audio_context(); // create the audio system
+      var osc = con.createOscillator(); // create an oscillator
+
+      osc.start();
+
+      // Nexus UI
+      function tiltChanged(data) {
+        console.log(data);
+        osc.frequency.value = data.x * 500;
+      }
+
+      var tilt = new Nexus.Tilt("#tilt");
+      tilt.on("change", tiltChanged);
+    </script>
+  </body>
+</html>
