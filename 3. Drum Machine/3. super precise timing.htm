@@ -40,19 +40,31 @@
 			var hat; // hi-hat
 			var hat_seq = [1,1,1,1,1,1];
 			var step = 0;
+			var interval = 0.125/2;
 			var hat_playing = false;
 
+			var wait_time = 0.01;
+			var got_up_to;
+
 			setInterval(function() {
-				if (hat_seq[step % hat_seq.length] == 1 && hat_playing) {
-					playHat();
+				var now = con.currentTime;
+				var max_future_time = now + (wait_time * 1.5); // how far in the future we will schedule
+				if (got_up_to > now) { // already scheduled up to shis point
+					now = got_up_to;
 				}
-				step += 1;
-			}, 125/2);
+				while (now <= max_future_time) {
+					step++;
+					if (hat_seq[step % hat_seq.length] == 1 && hat_playing) {
+						playHat(now);
+					}
+					now += interval;
+				}
+				got_up_to = now;
+			}, wait_time * 1000);
 
 			loadSample("https://vchet.github.io/JS-synth/3. Drum Machine/hh.wav", function(buffer) {
 				hat = buffer;
 			});
-
 		</script>
 	</body>
 </html>
