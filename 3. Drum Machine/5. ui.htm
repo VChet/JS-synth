@@ -6,7 +6,8 @@
 		<div style="background:#272727; height:100%">
 			<div style="padding:15px">
 				<div id="sequencer"></div>
-				<span id="slider"></span>
+				<span id="intervalSlider"></span>
+				<span id="colCountSlider"></span>
 			</div>
 		</div>
 		<script>
@@ -39,37 +40,26 @@
 			var hat;
 			var snare;
 
-			var seq = [
-				[0,0,0,0,0],
-				[0,0,0,0,0],
-			]
-
-			var step = seq[0].length - 1;
+			// Timing
 			var interval = 0.4;
 			var wait_time = interval / 4;
 			var got_up_to;
+			var now = con.currentTime;
 
 			setInterval(function() {
-				var now = con.currentTime;
+				now = con.currentTime;
 				var max_future_time = now + (wait_time * 1.5); // how far in the future we will schedule
 				if (got_up_to > now) { // already scheduled up to shis point
 					now = got_up_to;
 				}
 				while (now <= max_future_time) {
-					step++;
 					sequencer.next();
-					if (seq[0][step % seq[0].length] == 1) {
-						playSound(hat, now);
-					}
-					if (seq[1][step % seq[1].length] == 1) {
-						playSound(snare, now);
-					}
 					now += interval;
 				}
 				got_up_to = now;
 			}, wait_time * 1000);
 
-			// Sample loading
+			// Loading samples
 			loadSample("https://vchet.github.io/JS-synth/3. Drum Machine/hh.wav", function(buffer) {
 				hat = buffer;
 			});
@@ -78,27 +68,44 @@
 			});
 
 			// Nexus UI
-			function sequencerChanged(data) {
-				seq[data.row][data.column] = data.state ? 1 : 0;
-				//console.log(seq[0], seq[1]);
+			function sequencerStep(data) {
+				if (data[1]) {
+					playSound(hat, now);
+				}
+				if (data[0]) {
+					playSound(snare, now);
+				}
 			}
 
 			var sequencer = new Nexus.Sequencer("#sequencer", {
 				"size": [200,200],
-				"rows": seq.length,
-				"columns": seq[0].length
+				"rows": 2,
+				"columns": 2
 			});
-			sequencer.on("change", sequencerChanged);
+			sequencer.on("step", sequencerStep);
 			sequencer.colorize("mediumLight","blue");
 
-			var slider = new Nexus.Slider("#slider", {
+			var intervalSlider = new Nexus.Slider("#intervalSlider", {
 				"size": [100,20],
 				"value": interval,
 				"min": 0.1,
 				"max": 1
 			});
-			slider.on("change", function(v) {
+			intervalSlider.on("change", function(v) {
 				interval = v;
+			})
+
+			var colCountSlider = new Nexus.Slider("#colCountSlider", {
+				"size": [100,20],
+				"value": sequencer.columns,
+				"min": 2,
+				"max": 10,
+				"step": 1
+			});
+			colCountSlider.on("change", function(v) {
+				sequencer.columns = v;
+				sequencer.resize(sequencer.columns * 100,200);
+				sequencer.matrix.populate.all(0);
 			})
 		</script>
 	</body>
