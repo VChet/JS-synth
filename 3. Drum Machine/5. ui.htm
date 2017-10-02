@@ -1,0 +1,92 @@
+<html>
+	<head>
+		<script src="../NexusUI.js"></script>
+	</head>
+	<body style="margin:0; padding:0; color:#BBB">
+		<div style="background:#272727; height:100%">
+			<div style="padding:15px">
+				<div id="sequencer"></div>
+			</div>
+		</div>
+		<script>
+			function loadSample(url, callback) {
+				var request = new XMLHttpRequest();
+				request.open("GET", url, true);
+				request.responseType = "arraybuffer";
+				request.onload = function() {
+					var audioData = request.response;
+					con.decodeAudioData(audioData, function(buffer) {
+						//console.log(buffer);
+						callback(buffer);
+					});
+				}
+				request.send();
+			}
+
+			function playSound(buffer, time) {
+				var player = con.createBufferSource();
+				player.buffer = buffer;
+				player.loop = false;
+				player.connect(con.destination);
+				player.start();
+			}
+
+			// Audio Engine
+			var audio_context = window.AudioContext || window.webkitAudioContext;
+			var con = new audio_context(); // create the audio system
+
+			var hat;
+			var snare;
+
+			var seq = [
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+			]
+
+			var step = 0;
+			var interval = 0.4;
+			var wait_time = interval / 4;
+			var got_up_to;
+
+			setInterval(function() {
+				var now = con.currentTime;
+				var max_future_time = now + (wait_time * 1.5); // how far in the future we will schedule
+				if (got_up_to > now) { // already scheduled up to shis point
+					now = got_up_to;
+				}
+				while (now <= max_future_time) {
+					step++;
+					if (seq[0][step % seq[0].length] == 1) {
+						playSound(hat, now);
+					}
+					if (seq[1][step % seq[1].length] == 1) {
+						playSound(snare, now);
+					}
+					now += interval;
+				}
+				got_up_to = now;
+			}, wait_time * 1000);
+
+			// Sample loading
+			loadSample("https://vchet.github.io/JS-synth/3. Drum Machine/hh.wav", function(buffer) {
+				hat = buffer;
+			});
+			loadSample("https://vchet.github.io/JS-synth/3. Drum Machine/sn.wav", function(buffer) {
+				snare = buffer;
+			});
+
+			// Nexus UI
+			function sequencerChanged(data) {
+				seq[data.row][data.column] = data.state ? 1 : 0;
+				console.log(seq[0], seq[1]);
+			}
+
+			var sequencer = new Nexus.Sequencer("#sequencer", {
+				"size": [200,200],
+				"rows": seq.length,
+				"columns": seq[0].length
+			});
+			sequencer.on("change", sequencerChanged);
+		</script>
+	</body>
+</html>
