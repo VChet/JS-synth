@@ -43,7 +43,7 @@
 				[0,0,0,0,0],
 			]
 
-			var step = 0;
+			var step = seq[0].length - 1;
 			var interval = 0.4;
 			var wait_time = interval / 4;
 			var got_up_to;
@@ -56,6 +56,7 @@
 				}
 				while (now <= max_future_time) {
 					step++;
+					sequencer.next();
 					if (seq[0][step % seq[0].length] == 1) {
 						playSound(hat, now);
 					}
@@ -78,7 +79,7 @@
 			// Nexus UI
 			function sequencerChanged(data) {
 				seq[data.row][data.column] = data.state ? 1 : 0;
-				console.log(seq[0], seq[1]);
+				//console.log(seq[0], seq[1]);
 			}
 
 			var sequencer = new Nexus.Sequencer("#sequencer", {
