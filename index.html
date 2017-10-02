@@ -1,52 +1,90 @@
 <head>
-  <style type="text/css">
-	body {
-		margin: 0;
+	<link type="text/css" rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700&subset=latin,cyrillic,greek,latin-ext,cyrillic-ext" />
+	<style type="text/css">
+	html,body {
 		padding: 0;
-		background: #272727;
-		color: #BBB;
+		margin: 0;
+		font-family: "Open Sans", Arial, Helvetica, sans-serif;
+	}
+
+	body {
+		background-color: #272727;
+		color: #fff;
 		text-align: center;
 	}
 
-	div {
-		padding: 20px;
-		font: 17pt monospace;
+	h1,h2,p,ul,li,div {
+		display: block;
+		padding: 0;
+		margin: 0;
 	}
 
 	a {
-		color: #D6EAF8;
-		text-decoration: none;
+		text-decoration: inherit;
+		color: #80e3e3;
 	}
 
-	a:hover {
-		color: #5DADE2;
-		font-style: italic;
+	a:hover, a:visited:hover {
+		color: #ddd;
+		position: relative;
+		top: 1px;
 	}
 
-	h3 {
-		margin: 20px 0 8px;
-		text-decoration: underline;
+	h1 {
+		font-size: 30px;
+		margin-bottom: 12px;
+		margin-top: 30px;
+	}
+
+	h2 {
+		font-size: 22px;
+		margin-bottom: 8px;
+		margin-top: 30px;
+	}
+
+	ul {
+		font-size: 20px;
+	}
+
+	ul li {
+		margin-bottom: 5px
+	}
+
+	.comment {
+		font-size: 14px;
+		line-height: 20px;
+		color: #858585;
+		font-weight: normal;
 	}
   </style>
 </head>
 <body>
 	<div>
-		<h3>Basics</h3>
-		Controlled synth:
-		<a href="1. Basics\1. mouse controlled synth.htm">mouse</a> /
-		<a href="1. Basics\2. keyboard controlled synth.htm">keyboard</a><br>
-		<a href="1. Basics\3. LFO.htm">LFO</a><br>
-		<a href="1. Basics\4. using envelopes.htm">Envelopes</a><br>
-		<a href="1. Basics\5. filters.htm">Filter</a><br>
-		<h3>Nexus UI</h3>
-		<a href="2. UI\1. slider&number.htm">Slider</a><br>
-		<a href="2. UI\2. keyboard.htm">Keyboard</a><br>
-		<a href="2. UI\3. tilt sensor control.htm">Tilt sensor control</a><br>
-		<h3>Drum Machine</h3>
-		<a href="3. Drum Machine\1. load&play a sample.htm">Load&play a sample</a><br>
-		<a href="3. Drum Machine\2. sample sequence.htm">Sample sequence</a>
-		(<a href="3. Drum Machine\3. super precise timing.htm">Super precise</a>)<br>
-		<a href="3. Drum Machine\4. multiple sounds.htm">Multiple samples</a><br>
-		<a href="3. Drum Machine\5. ui.htm">UI</a>
+		<a href="https://github.com/VChet/JS-synth"><img style="filter:invert(1)" src="https://image.flaticon.com/icons/svg/33/33600.svg"></a>
+		<h1>Electronic Music Tools</h1>
+		<span class="comment">using Javascript and Web Audio API</span>
+		<h2>Basics</h2>
+		<ul>
+			<li><p class="comment">Synth control<p>
+				<a href="1. Basics\1. mouse controlled synth.htm">Mouse</a> /
+				<a href="1. Basics\2. keyboard controlled synth.htm">Keyboard</a>
+			</li>
+			<li><a href="1. Basics\3. LFO.htm">Low-frequency oscillation</a></li>
+			<li><a href="1. Basics\4. using envelopes.htm">Envelopes</a></li>
+			<li><a href="1. Basics\5. filters.htm">Filter</a></li>
+		</ul>
+		<h2>Nexus UI</h2>
+		<ul>
+			<li><a href="2. UI\1. slider&number.htm">Slider</a></li>
+			<li><a href="2. UI\2. keyboard.htm">Keyboard</a></li>
+			<li><a href="2. UI\3. tilt sensor control.htm">Tilt sensor control <span class="comment">Mobile</span></a></li>
+		</ul>
+		<h2>Drum Machine</h2>
+		<ul>
+			<li><a href="3. Drum Machine\1. load&play a sample.htm">Simple sample playing</a></li>
+			<li><a href="3. Drum Machine\3. super precise timing.htm">Sample sequence</a></li>
+			<li><a href="3. Drum Machine\4. multiple sounds.htm">Multiple samples</a></li>
+			<li><a href="3. Drum Machine\5. ui.htm">Sequencer</a></li>
+		</ul>
 	</div>
 </body>
