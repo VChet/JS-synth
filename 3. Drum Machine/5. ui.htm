@@ -6,6 +6,7 @@
 		<div style="background:#272727; height:100%">
 			<div style="padding:15px">
 				<div id="sequencer"></div>
+				<span id="slider"></span>
 			</div>
 		</div>
 		<script>
@@ -89,6 +90,16 @@
 			});
 			sequencer.on("change", sequencerChanged);
 			sequencer.colorize("mediumLight","blue");
+
+			var slider = new Nexus.Slider("#slider", {
+				"size": [100,20],
+				"value": interval,
+				"min": 0.1,
+				"max": 1
+			});
+			slider.on("change", function(v) {
+				interval = v;
+			})
 		</script>
 	</body>
 </html>
