@@ -1,0 +1,58 @@
+<html>
+	<body style="margin:0; padding:0; color:#BBB">
+		<div style="background:#272727; height:100%">
+			<div style="padding:15px">
+				<button onclick="play(false)">Start</button>
+				<button onclick="play(true)">Stop</button><br><br>
+			</div>
+		</div>
+		<script>
+			function loadSample(url, callback) {
+				var request = new XMLHttpRequest();
+				request.open("GET", url, true);
+				request.responseType = "arraybuffer";
+				request.onload = function() {
+					var audioData = request.response;
+					con.decodeAudioData(audioData, function(buffer) {
+						console.log(buffer);
+						callback(buffer);
+					});
+				}
+				request.send();
+			}
+
+			function playHat(playing){
+				var player = con.createBufferSource();
+				player.buffer = hat;
+				player.loop = false;
+				player.start();
+				player.connect(con.destination);
+			}
+
+			function play(playing) {
+				hat_playing = (playing) ? false : true;
+			}
+
+			// Audio Engine
+			var audio_context = window.AudioContext || window.webkitAudioContext;
+			var con = new audio_context(); // create the audio system
+
+			var hat; // hi-hat
+			var hat_seq = [1,1,0,0,1,0];
+			var step = 0;
+			var hat_playing = false;
+
+			setInterval(function() {
+				if (hat_seq[step % hat_seq.length] == 1 && hat_playing) {
+					playHat();
+				}
+				step += 1;
+			}, 125/2);
+
+			loadSample("https://vchet.github.io/JS-synth/3. Drum Machine/hh.wav", function(buffer) {
+				hat = buffer;
+			});
+
+		</script>
+	</body>
+</html>
