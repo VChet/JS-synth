@@ -1,0 +1,40 @@
+<html>
+	<head>
+		<script src="../NexusUI.js"></script>
+	</head>
+	<body style="margin:0; padding:0; color:#BBB">
+		<div style="background:#272727; height:100%" onmousedown="changeNote()">
+			<div style="padding:15px">
+				<button onclick="osc.connect(con.destination);">Start</button>
+				<button onclick="osc.disconnect()">Stop</button><br><br>
+			</div>
+		</div>
+		<script>
+			function changeNote() {
+				//freq = Math.random() * 1000;
+				freq = freq * 1.5;
+
+				if (freq > 700) {
+					freq = 200 + Math.random() * 200;
+				}
+
+				osc.frequency.value = freq;
+				osc.frequency.setValueAtTime(freq, con.currentTime);
+			}
+
+			// Audio Engine
+			var audio_context = window.AudioContext || window.webkitAudioContext;
+			var con = new audio_context(); // create the audio system
+
+			var osc = con.createOscillator();
+			osc.type = "triangle";
+			var freq = 200;
+
+			osc.start();
+
+			setInterval(changeNote, 125);
+
+			osc.frequency.value = freq;
+		</script>
+	</body>
+</html>
