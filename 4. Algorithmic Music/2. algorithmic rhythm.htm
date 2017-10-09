@@ -1,0 +1,80 @@
+<html>
+	<head>
+		<script src="../NexusUI.js"></script>
+	</head>
+	<body style="margin:0; padding:0; color:#BBB">
+		<div style="background:#272727; height:100%">
+			<div style="padding:15px">
+				<button onclick="play(true)">Start</button>
+				<button onclick="play(false)">Stop</button><br><br>
+			</div>
+		</div>
+		<script>
+			function changeNote() {
+				//freq = Math.random() * 1000;
+				freq = freq * 1.5;
+
+				if (freq > 700) {
+					freq = 200 + Math.random() * 200;
+				}
+
+				osc.frequency.value = freq;
+				osc.frequency.setValueAtTime(freq, con.currentTime);
+			}
+
+			function loadSample(url, callback) {
+				var request = new XMLHttpRequest();
+				request.open("GET", url, true);
+				request.responseType = "arraybuffer";
+				request.onload = function() {
+					var audioData = request.response;
+					con.decodeAudioData(audioData, function(buffer) {
+						callback(buffer);
+					});
+				}
+				request.send();
+			}
+
+			function playHat() {
+					var player = con.createBufferSource();
+					player.buffer = hat;
+					player.start();
+					player.loop = false;
+					player.connect(con.destination);
+			}
+
+			function play(status) {
+				isPlaying = status;
+				if (isPlaying) {
+					osc.connect(con.destination);
+				} else {
+					osc.disconnect();
+				}
+				console.log(isPlaying);
+			}
+
+			// Audio Engine
+			var audio_context = window.AudioContext || window.webkitAudioContext;
+			var con = new audio_context(); // create the audio system
+			var isPlaying = false;
+
+			var hat;
+			loadSample("https://vchet.github.io/JS-synth/3. Drum Machine/hh.wav", function(buffer) {
+				hat = buffer;
+			});
+
+			var osc = con.createOscillator();
+			osc.type = "triangle";
+			var freq = 200;
+
+			osc.start();
+
+			setInterval(changeNote, 125);
+			setInterval(function() {
+				if (isPlaying && Math.random() > 0.3) {	playHat(); }
+			}, 125);
+
+			osc.frequency.value = freq;
+		</script>
+	</body>
+</html>
