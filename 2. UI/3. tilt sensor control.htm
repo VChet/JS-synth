@@ -1,33 +1,44 @@
 <html>
-  <head>
-    <script src="../NexusUI.js"></script>
-  </head>
-  <body style="margin:0; padding:0; color:#BBB">
-    <div style="background:#272727; height:100%">
-      <div style="padding:15px">
-        <button onclick="osc.connect(con.destination);">Start</button>
-        <button onclick="osc.disconnect()">Stop</button><br><br>
+	<head>
+		<script src="../NexusUI.js"></script>
+	</head>
+	<body style="margin:0; padding:0; color:#BBB">
+		<div style="background:#272727; height:100%">
+			<div style="text-align:center">
+				<span id="tilt"></span><br><br>
+				<span id="oscToggle"></span>
+			</div>
+		</div>
+		<script>
+			// Audio Engine
+			var audio_context = window.AudioContext || window.webkitAudioContext;
 
-        <span id="tilt"></span>
-      </div>
-    </div>
-    <script>
-      // Audio Engine
-      var audio_context = window.AudioContext || window.webkitAudioContext;
+			var con = new audio_context(); // create the audio system
+			var osc = con.createOscillator(); // create an oscillator
 
-      var con = new audio_context(); // create the audio system
-      var osc = con.createOscillator(); // create an oscillator
+			osc.start();
 
-      osc.start();
+			// Nexus UI
+			function tiltChanged(data) {
+				console.log(data);
+				osc.frequency.value = data.x * 500;
+			}
 
-      // Nexus UI
-      function tiltChanged(data) {
-        console.log(data);
-        osc.frequency.value = data.x * 500;
-      }
+			var tilt = new Nexus.Tilt("#tilt",{
+				"size": [500,500]
+			});
+			tilt.on("change", tiltChanged);
 
-      var tilt = new Nexus.Tilt("#tilt");
-      tilt.on("change", tiltChanged);
-    </script>
-  </body>
+			var oscToggle = new Nexus.Toggle("#oscToggle",{
+				"size": [500,150]
+			});
+			oscToggle.on("change", function(state) {
+				if (state) {
+					osc.connect(con.destination);
+				} else {
+					osc.disconnect();
+				}
+			});
+		</script>
+	</body>
 </html>
