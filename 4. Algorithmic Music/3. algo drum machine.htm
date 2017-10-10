@@ -1,0 +1,111 @@
+<html>
+	<head>
+		<script src="../NexusUI.js"></script>
+	</head>
+	<body style="margin:0; padding:0; color:#BBB">
+		<div style="background:#272727; height:100%">
+			<div style="padding:15px">
+				<button onclick="play(true)">Start</button>
+				<button onclick="play(false)">Stop</button><br><br>
+			</div>
+		</div>
+		<script>
+			function changeNote() {
+				//freq = Math.random() * 1000;
+				freq = freq * 1.5;
+
+				if (freq > 700) {
+					freq = 200 + Math.random() * 200;
+				}
+
+				osc.frequency.value = freq;
+				osc.frequency.setValueAtTime(freq, con.currentTime);
+			}
+
+			function loadSample(url, callback) {
+				var request = new XMLHttpRequest();
+				request.open("GET", url, true);
+				request.responseType = "arraybuffer";
+				request.onload = function() {
+					var audioData = request.response;
+					con.decodeAudioData(audioData, function(buffer) {
+						callback(buffer);
+					});
+				}
+				request.send();
+			}
+
+			function playSound(buffer, time) {
+				var player = con.createBufferSource();
+				player.buffer = buffer;
+				player.loop = false;
+				player.connect(con.destination);
+				player.start();
+			}
+
+			function play(status) {
+				isPlaying = status;
+				if (isPlaying) {
+					osc.connect(con.destination);
+				} else {
+					osc.disconnect();
+				}
+			}
+
+			// Audio Engine
+			var audio_context = window.AudioContext || window.webkitAudioContext;
+			var con = new audio_context(); // create the audio system
+			var isPlaying = false;
+
+			var hat;
+			var snare;
+
+			var hat_seq = [0.25,1,1,0.7];
+			var sn_seq = [1,0.9,0.9,0.25];
+
+			var step = 0;
+			var interval = 0.125;
+
+			var wait_time = 0.125;
+			var got_up_to;
+			var now = con.currentTime;
+
+			loadSample("https://vchet.github.io/JS-synth/3. Drum Machine/hh.wav", function(buffer) {
+				hat = buffer;
+			});
+			loadSample("https://vchet.github.io/JS-synth/3. Drum Machine/sn.wav", function(buffer) {
+				snare = buffer;
+			});
+
+			setInterval(function() {
+				now = con.currentTime;
+				var max_future_time = now + (wait_time * 1.5); // how far in the future we will schedule
+				if (got_up_to > now) { // already scheduled up to shis point
+					now = got_up_to;
+				}
+				while (now <= max_future_time) {
+					step++;
+					changeNote();
+					if (isPlaying ) {
+						if (hat_seq[step % hat_seq.length] > Math.random()) {
+							playSound(hat, now);
+						}
+						if (sn_seq[step % sn_seq.length] > Math.random()) {
+							playSound(snare, now);
+						}
+					}
+					now += interval;
+				}
+				got_up_to = now;
+			}, wait_time * 1000);
+
+			var osc = con.createOscillator();
+			osc.type = "triangle";
+			var freq = 200;
+
+			osc.start();
+
+			osc.frequency.value = freq;
+		</script>
+	</body>
+</html>
