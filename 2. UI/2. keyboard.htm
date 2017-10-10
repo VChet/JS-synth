@@ -4,9 +4,7 @@
 	</head>
 	<body style="margin:0; padding:0; color:#BBB">
 		<div style="background:#272727; height:100%">
-			<div style="padding:50px; left:-50%; float:right; position:relative">
-				<div style="left:50%; position:relative" id="keyboard"></div>
-			</div>
+			<div id="keyboard"></div>
 		</div>
 		<script>
 			// Audio Engine
@@ -39,8 +37,9 @@
 				}
 			}
 
+			var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
 			var keyboard = new Nexus.Piano("#keyboard", {
-				"size": [1200,500],
+				"size": [width,500],
 				"lowNote": 41,
 				"highNote": 89
 			});
