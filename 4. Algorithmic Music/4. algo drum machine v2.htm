@@ -5,14 +5,19 @@
 	<body style="margin:0; padding:0; color:#BBB">
 		<div style="background:#272727; height:100%">
 			<div style="padding:15px">
-				hats&snares
+				drums
 				<div id="samplesToggle"></div>
 				oscillator
 				<div id="oscToggle"></div>
-				<p>write numbers from 0 to 1 separated by comma to change hat sequence</p>
-				<textarea id = "hat_editor"	onkeyup = "updateHats()"></textarea>
-				<p>same for snare</p>
-				<textarea id = "sn_editor"	onkeyup = "updateSnare()"></textarea>
+				delay
+				<div id="delaySlider"></div>
+				<p>write numbers from 0 to 1 separated by comma to change sequence</p>
+				hi-hat<br>
+				<textarea id="hat_editor" onkeyup="updateHats()">1,1,1</textarea><br>
+				snare<br>
+				<textarea id="sn_editor" onkeyup="updateSnare()">1,0,0</textarea><br>
+				bass<br>
+				<textarea id="bd_editor" onkeyup="updateBass()">0.5,0,0,0</textarea>
 			</div>
 		</div>
 		<script>
@@ -23,11 +28,11 @@
 
 			// Oscillator
 			function changeNote(time) {
-				//freq = Math.random() * 1000;
-				freq = freq * 1.5;
+				freq *= 1.5;
+				console.log(freq);
 
-				if (freq > 2000) {
-					freq *= 0.1;
+				if (freq > 800) {
+					freq *= 0.3;
 				}
 
 				osc.frequency.value = freq;
@@ -35,17 +40,33 @@
 			}
 
 			var osc = con.createOscillator();
+			var osc_amp = con.createGain(); // make it quieter
+			var delay = con.createDelay();
+			var fb = con.createGain(); // delay feedback
+			var drum_gain = con.createGain();
+			var comp = con.createDynamicsCompressor();
+
 			var freq = 200;
-
-			var osc_amp = con.createGain();
-			osc_amp.gain.value = 0.3;
-
-			osc.connect(osc_amp);
 			osc.type = "triangle";
 
-			osc.start();
-
 			osc.frequency.value = freq;
+			osc_amp.gain.value = 0.4;
+			delay.delayTime.value = 0.25;
+			fb.gain.value = 0.45;
+			drum_gain.gain.value = 100;
+
+			//osc.connect(osc_amp); // toggles by button
+			osc_amp.connect(delay);
+			delay.connect(fb);
+			fb.connect(delay);
+			delay.connect(con.destination);
+			// oscillator > gain > delay > gain > (back to delay) >> output
+
+			drum_gain.connect(comp);
+			comp.connect(con.destination);
+			// drums > gain > compressor > output
+
+			osc.start();
 
 			// Samples
 			function loadSample(url, callback) {
@@ -65,27 +86,35 @@
 				var player = con.createBufferSource();
 				player.buffer = buffer;
 				player.loop = false;
-				player.connect(con.destination);
 				player.start(time);
+				player.connect(drum_gain);
 			}
 
 			function updateHats() {
 				var text = document.getElementById("hat_editor").value;
 				hat_seq = text.split(",");
-				console.log("hat sequence",hat_seq);
+				//console.log("hat sequence",hat_seq);
 			}
 
 			function updateSnare() {
 				var text = document.getElementById("sn_editor").value;
 				sn_seq = text.split(",");
-				console.log("snare sequence",sn_seq);
+				//console.log("snare sequence",sn_seq);
+			}
+
+			function updateBass() {
+				var text = document.getElementById("bd_editor").value;
+				bd_seq = text.split(",");
+				//console.log("bass sequence",bd_seq);
 			}
 
 			var hat;
 			var snare;
+			var bass;
 
-			var hat_seq = [0];
-			var sn_seq = [0];
+			var hat_seq = [1,1,1];
+			var sn_seq = [1,0,0];
+			var bd_seq = [0.5,0,0,0];
 
 			var step = 0;
 			var interval = 0.125;
@@ -99,6 +128,9 @@
 			});
 			loadSample("https://vchet.github.io/JS-synth/samples/sn.wav", function(buffer) {
 				snare = buffer;
+			});
+			loadSample("https://vchet.github.io/JS-synth/samples/bd.wav", function(buffer) {
+				bass = buffer;
 			});
 
 			setInterval(function() {
@@ -117,6 +149,9 @@
 						if (sn_seq[step % sn_seq.length] > Math.random()) {
 							playSound(snare, now);
 						}
+						if (bd_seq[step % bd_seq.length] > Math.random()) {
+							playSound(bass, now);
+						}
 					}
 					now += interval;
 				}
@@ -132,11 +167,21 @@
 			var oscToggle = new Nexus.Toggle('#oscToggle')
 			oscToggle.on("change", function(state) {
 				if (state) {
-					osc_amp.connect(con.destination);
+					osc.connect(osc_amp);
 				} else {
-					osc_amp.disconnect();
+					osc.disconnect();
 				}
 			});
+
+			var delaySlider = new Nexus.Slider("#delaySlider", {
+				"value": delay.delayTime.value,
+				"min": 0,
+				"max": 1,
+				"step": 0.05
+			});
+			delaySlider.on("change", function(v) {
+				delay.delayTime.value = v;
+			})
 		</script>
 	</body>
 </html>
