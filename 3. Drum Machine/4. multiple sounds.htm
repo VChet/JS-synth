@@ -1,9 +1,11 @@
 <html>
+	<head>
+		<script src="../NexusUI.js"></script>
+	</head>
 	<body style="margin:0; padding:0; color:#BBB">
 		<div style="background:#272727; height:100%">
 			<div style="padding:15px">
-				<button onclick="playButton(false)">Start</button>
-				<button onclick="playButton(true)">Stop</button><br><br>
+				<div id="sampleToggle"></div>
 			</div>
 		</div>
 		<script>
@@ -14,7 +16,6 @@
 				request.onload = function() {
 					var audioData = request.response;
 					con.decodeAudioData(audioData, function(buffer) {
-						console.log(buffer);
 						callback(buffer);
 					});
 				}
@@ -27,10 +28,6 @@
 				player.loop = false;
 				player.connect(con.destination);
 				player.start();
-			}
-
-			function playButton(playing) {
-				sound_enabled = (playing) ? false : true;
 			}
 
 			// Audio Engine
@@ -77,6 +74,14 @@
 			});
 			loadSample("https://vchet.github.io/JS-synth/samples/sn.wav", function(buffer) {
 				snare = buffer;
+			});
+
+			// Nexus UI
+			var sampleToggle = new Nexus.Toggle("#sampleToggle", {
+				"size": [100,100]
+			});
+			sampleToggle.on("change", function(state) {
+				sound_enabled = state;
 			});
 		</script>
 	</body>
