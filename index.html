@@ -1,67 +1,64 @@
 <head>
-	<link type="text/css" rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700&subset=latin,cyrillic,greek,latin-ext,cyrillic-ext" />
+	<link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700&subset=latin,cyrillic,greek,latin-ext,cyrillic-ext" />
 	<style type="text/css">
+	:root {
+		--color: #80e3e3;
+	}
 	html,body {
 		padding: 0;
 		margin: 0;
 		font-family: "Open Sans", Arial, Helvetica, sans-serif;
 	}
-
 	body {
 		background-color: #272727;
 		color: #fff;
 		text-align: center;
 	}
-
 	h1,h2,p,ul,li,div {
 		display: block;
 		padding: 0;
 		margin: 0;
 	}
-
 	a {
 		text-decoration: inherit;
-		color: #80e3e3;
-	}
-
-	a:hover, a:visited:hover {
 		color: #ddd;
+	}
+	div a:hover, div a:visited:hover {
+		color: var(--color);
 		position: relative;
 		top: 1px;
 	}
-
 	h1 {
 		font-size: 30px;
-		margin-bottom: 12px;
+		margin-bottom: 10px;
 		margin-top: 30px;
 	}
-
 	h2 {
 		font-size: 22px;
-		margin-bottom: 8px;
-		margin-top: 30px;
+		margin-top: 15px;
 	}
-
 	ul {
 		font-size: 20px;
+		margin: 15px;
 	}
-
 	ul li {
 		margin-bottom: 5px
 	}
-
 	.comment {
 		font-size: 14px;
 		line-height: 20px;
 		color: #858585;
 		font-weight: normal;
 	}
+	.hl {
+		color: var(--color);
+	}
   </style>
 </head>
 <body>
+	<a href="https://github.com/VChet/JS-synth"><img style="filter:invert(1)" src="https://image.flaticon.com/icons/svg/33/33600.svg"></a>
 	<div>
-		<a href="https://github.com/VChet/JS-synth"><img style="filter:invert(1)" src="https://image.flaticon.com/icons/svg/33/33600.svg"></a>
-		<h1>Electronic Music Tools</h1>
+		<h1>Electronic Music <span class="hl">Tools</span></h1>
 		<span class="comment">using Javascript and Web Audio API</span>
 		<h2>Basics</h2>
 		<ul>
